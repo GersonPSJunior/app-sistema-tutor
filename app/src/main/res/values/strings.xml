@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Sistema Tutor</string>
+    <string name="dashboard">Dashboard</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="concordo">Concordo</string>
+    <string name="concordo_parcialmente">Concordo Parcialmente</string>
+    <string name="neutro">Neutro</string>
+    <string name="discordo_parcialmente">Discordo Parcialmente</string>
+    <string name="discordo">Discordo</string>
+    <string name="sim">Sim</string>
+    <string name="nao">Não</string>
 </resources>

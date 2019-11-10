@@ -12,7 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.extra.QuestionExtraCurricular"></activity>
+        <activity android:name=".ui.familia.QuestionFamilia" />
+        <activity android:name=".ui.reforco.QuestionReforco" />
+        <activity android:name=".ui.autodidata.QuestionAutodidata" />
+        <activity android:name=".ui.Dashboard">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
