@@ -14,7 +14,7 @@ public class QuestionExtraCurricular extends AppCompatActivity {
         setContentView(R.layout.activity_question_extra_curricular);
         getSupportFragmentManager ()
                 .beginTransaction ()
-                .replace (R.id.frame_extra, new ExtraCurricularFragment())
+                .replace (R.id.frame_extra, new Ajuda())
                 .commit ();
     }
 }

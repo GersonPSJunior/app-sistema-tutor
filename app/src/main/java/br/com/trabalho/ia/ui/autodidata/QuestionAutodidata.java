@@ -14,7 +14,7 @@ public class QuestionAutodidata extends AppCompatActivity {
         setContentView(R.layout.activity_question_autodidata);
         getSupportFragmentManager ()
                 .beginTransaction ()
-                .replace (R.id.frame_aprendizado, new AutodidataFragment())
+                .replace (R.id.frame_aprendizado, new Audicao())
                 .commit ();
     }
 }

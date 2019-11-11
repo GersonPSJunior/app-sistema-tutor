@@ -49,7 +49,7 @@
                 android:id="@+id/radio_espaco_estudo_concordop"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/discordo_parcialmente" />
+                android:text="@string/concordo_parcialmente" />
 
             <RadioButton
                 android:id="@+id/radio_espaco_estudo_neutro"

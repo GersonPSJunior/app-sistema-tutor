@@ -43,7 +43,7 @@
                 android:id="@+id/radio_melhorar_nota_concordo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/concordo_parcialmente" />
+                android:text="@string/concordo" />
 
             <RadioButton
                 android:id="@+id/radio_melhorar_nota_concordop"

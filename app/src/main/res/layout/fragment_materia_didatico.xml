@@ -64,7 +64,7 @@
                 android:text="@string/discordo_parcialmente" />
 
             <RadioButton
-                android:id="@+id/radio_visao_discordo"
+                android:id="@+id/radio_materia_discordo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="@string/discordo" />

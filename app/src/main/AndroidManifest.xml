@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".ui.extra.QuestionExtraCurricular"></activity>
+        <activity android:name=".ui.ResultPerfilActivity"></activity>
+        <activity android:name=".ui.extra.QuestionExtraCurricular" />
         <activity android:name=".ui.familia.QuestionFamilia" />
         <activity android:name=".ui.reforco.QuestionReforco" />
         <activity android:name=".ui.autodidata.QuestionAutodidata" />

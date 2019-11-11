@@ -14,7 +14,7 @@ public class QuestionReforco extends AppCompatActivity {
         setContentView(R.layout.activity_question_reforco);
         getSupportFragmentManager ()
                 .beginTransaction ()
-                .replace (R.id.frame_reforco, new ReforcoFragment())
+                .replace (R.id.frame_reforco, new AprenderMais())
                 .commit ();
     }
 }

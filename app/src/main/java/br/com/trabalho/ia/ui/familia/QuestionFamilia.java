@@ -14,7 +14,7 @@ public class QuestionFamilia extends AppCompatActivity {
         setContentView(R.layout.activity_question_familia);
         getSupportFragmentManager ()
                 .beginTransaction ()
-                .replace (R.id.frame_familia, new FamiliaFragment())
+                .replace (R.id.frame_familia, new TempoEstudo())
                 .commit ();
     }
 }
