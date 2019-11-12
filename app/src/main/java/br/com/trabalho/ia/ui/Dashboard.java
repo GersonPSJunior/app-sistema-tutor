@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -48,8 +50,22 @@ public class Dashboard extends AppCompatActivity implements IDashboard.View{
         RecyclerView recyclerView = findViewById(R.id.recycler_dashboard);
 
         List<Aluno> alunos = new AlunoRepository(this).listAll();
+        final AdapterDashboard adapter = new AdapterDashboard(this, alunos);
+        recyclerView.setAdapter(adapter);
 
-        recyclerView.setAdapter(new AdapterDashboard(this, alunos));
+        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
+                ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                adapter.remove(position, adapter.getAluno(position));
+            }
+        }).attachToRecyclerView(recyclerView);
     }
 
     @Override

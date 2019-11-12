@@ -1,6 +1,7 @@
 package br.com.trabalho.ia.ui.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,12 +9,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
 import br.com.trabalho.ia.R;
 import br.com.trabalho.ia.domain.Aluno;
+import br.com.trabalho.ia.repository.AlunoRepository;
 
 public class AdapterDashboard extends RecyclerView.Adapter<AdapterDashboard.DashboardViewHolder> {
 
@@ -44,6 +47,32 @@ public class AdapterDashboard extends RecyclerView.Adapter<AdapterDashboard.Dash
         return alunos.size();
     }
 
+    public Aluno getAluno(int position) {
+
+        return alunos.get(position);
+    }
+
+    public void remove(final int position, final Aluno aluno) {
+        new AlertDialog.Builder(context)
+                .setTitle("Deletando Livro")
+                .setMessage("Tem certeza que deseja deletar esse livros?")
+                .setPositiveButton("sim", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //GerenciarLivroDao.remolveLivro(adapterPosition);
+                        new AlunoRepository(context).delete(aluno);
+                        notifyItemRemoved(position);
+                    }
+                })
+                .setNegativeButton("não", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        notifyDataSetChanged();
+                    }
+                })
+                .show();
+    }
+
     public class DashboardViewHolder extends RecyclerView.ViewHolder{
 
         private TextView textAproveitamento;
@@ -63,6 +92,7 @@ public class AdapterDashboard extends RecyclerView.Adapter<AdapterDashboard.Dash
             textAproveitamento.setText((aluno.getMediaAutodidata() + aluno.getMediaFamilia())/2 + "%");
             textAutodidata.setText(aluno.getMediaAutodidata() +"%");
             textFamilia.setText(aluno.getMediaFamilia() +"%");
+            this.aluno = aluno;
         }
     }
 }

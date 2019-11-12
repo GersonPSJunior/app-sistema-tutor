@@ -1,5 +1,6 @@
 package br.com.trabalho.ia.ui.reforco;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.Button;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import br.com.trabalho.ia.R;
@@ -58,8 +60,23 @@ public class MelhorarNota extends Fragment {
                 }
                 App.getAluno().setMediaReforco((double) ((App.getAluno().getAprenderMais() +
                         App.getAluno().getConcorso() + App.getAluno().getMelhorarNota())/3));
-                getActivity().startActivity(new Intent(getActivity(), ResultPerfilActivity.class));
-                getActivity().finish();
+                new AlertDialog.Builder(getActivity())
+                        .setTitle("Questionario")
+                        .setMessage("Tem certeza que deseja finalizar o questionario?")
+                        .setPositiveButton("sim", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                getActivity().startActivity(new Intent(getActivity(), ResultPerfilActivity.class));
+                                getActivity().finish();
+                            }
+                        })
+                        .setNegativeButton("não", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
             }
         });
         return view;

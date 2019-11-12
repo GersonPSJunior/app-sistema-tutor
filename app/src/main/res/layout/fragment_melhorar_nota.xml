@@ -72,16 +72,16 @@
 
         <Button
             android:id="@+id/button_proximo_melhorar_nota"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/radio_group_melhorar_nota"
-            app:layout_constraintTop_toBottomOf="@+id/radio_group_melhorar_nota"
-            app:layout_constraintVertical_bias="1.0"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="16dp"
             android:background="@drawable/shape_button_proximo"
-            android:text="Proximo"
-            android:textColor="@android:color/white" />
+            android:text="Finalizar"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/radio_group_melhorar_nota"
+            app:layout_constraintTop_toBottomOf="@+id/radio_group_melhorar_nota"
+            app:layout_constraintVertical_bias="1.0" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </FrameLayout>
