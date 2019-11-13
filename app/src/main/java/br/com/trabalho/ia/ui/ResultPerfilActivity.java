@@ -1,8 +1,10 @@
 package br.com.trabalho.ia.ui;
 
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -33,9 +35,11 @@ public class ResultPerfilActivity extends AppCompatActivity {
     private TextView textReforcoNota;
     private TextView textResultAproveitamento;
     private TextView textResultFeadback;
-    private ConstraintLayout ConstraintExtra;
-    private ConstraintLayout ConstraintReforco;
+    private ConstraintLayout constraintExtra;
+    private ConstraintLayout constraintReforco;
+    private ConstraintLayout constraintResultAproveitamento;
     private Double aproveitamento;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +48,43 @@ public class ResultPerfilActivity extends AppCompatActivity {
 
         loadUi();
         loadText();
-        identifyVisible();
+        calculoAproveitamento();
+        feadbackValid();
         App.getAluno().setAlunoRepository(new AlunoRepository(this));
         App.getAluno().insert();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        new buscaInfo().execute();
+    }
+
+    private void calculoAproveitamento() {
+        if (App.getAluno().getAjuda() == null && App.getAluno().getConcorso() == null)
+            aproveitamento = (App.getAluno().getMediaAutodidata() * 0.5 + App.getAluno().getMediaFamilia() * 0.5);
+
+        if (App.getAluno().getAjuda() == null && App.getAluno().getConcorso() != null)
+            aproveitamento = (App.getAluno().getMediaAutodidata() * 0.35 +
+                    App.getAluno().getMediaFamilia() * 0.35 + App.getAluno().getMediaReforco() * 0.3);
+
+        if (App.getAluno().getAjuda() != null && App.getAluno().getConcorso() == null)
+            aproveitamento = (App.getAluno().getMediaAutodidata() * 0.35 +
+                    App.getAluno().getMediaFamilia() * 0.35 + App.getAluno().getMediaExtraCurricular() * 0.3);
+
+        if (App.getAluno().getAjuda() != null && App.getAluno().getConcorso() != null)
+            aproveitamento = (App.getAluno().getMediaAutodidata() * 0.3 + App.getAluno().getMediaFamilia() * 0.3 +
+                    App.getAluno().getMediaReforco() * 0.2 + App.getAluno().getMediaExtraCurricular() * 0.2);
+
+        textResultAproveitamento.setText(aproveitamento +"%");
+        textResultAproveitamento.setTextColor(aproveitamento < 60 ? Color.RED : Color.GREEN);
     }
 
     private void identifyVisible() {
-        if (App.getAluno().getAjuda() == null) ConstraintExtra.setVisibility(View.GONE);
+        constraintExtra.setVisibility(App.getAluno().getAjuda() == null ? View.GONE : View.VISIBLE);
 
-        if (App.getAluno().getConcorso() == null) ConstraintReforco.setVisibility(View.GONE);
+        constraintReforco.setVisibility(App.getAluno().getConcorso() == null ? View.GONE : View.VISIBLE);
 
     }
 
@@ -73,11 +105,6 @@ public class ResultPerfilActivity extends AppCompatActivity {
         textReforcoConcurso.setText(App.getAluno().getConcorso() +"%");
         textReforcoMedia.setText(App.getAluno().getMediaReforco() +"%");
         textReforcoNota.setText(App.getAluno().getMelhorarNota() +"%");
-        aproveitamento = (double) (App.getAluno().getAudicao() + App.getAluno().getRepeticao()
-                + App.getAluno().getVisao() + App.getAluno().getEspacoEstudo())/4;
-        textResultAproveitamento.setText(aproveitamento +"%");
-        textResultAproveitamento.setTextColor(aproveitamento < 60 ? Color.RED : Color.GREEN);
-        feadbackValid();
     }
 
     private void feadbackValid() {
@@ -111,7 +138,38 @@ public class ResultPerfilActivity extends AppCompatActivity {
         textReforcoNota = findViewById(R.id.text_reforco_nota);
         textResultAproveitamento = findViewById(R.id.text_result_aproveitamento);
         textResultFeadback = findViewById(R.id.text_result_feadback);
-        ConstraintExtra = findViewById(R.id.constraint_extra);
-        ConstraintReforco = findViewById(R.id.constraint_reforco);
+        constraintExtra = findViewById(R.id.constraint_extra);
+        constraintReforco = findViewById(R.id.constraint_reforco);
+        constraintResultAproveitamento = findViewById(R.id.constraint_result_aproveitamento);
+        progressBar = findViewById(R.id.progress_result);
+    }
+
+    class buscaInfo extends AsyncTask<Void, Void, Void> {
+
+        @Override
+        protected void onPreExecute() {
+            progressBar.setVisibility(View.VISIBLE);
+            constraintResultAproveitamento.setVisibility(View.GONE);
+            constraintExtra.setVisibility(View.GONE);
+            constraintReforco.setVisibility(View.GONE);
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            try {
+                String time = 3 + (int) (Math.random() * 6) + "000";
+                Thread.sleep(Long.valueOf(time));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void voids) {
+            progressBar.setVisibility(View.GONE);
+            constraintResultAproveitamento.setVisibility(View.VISIBLE);
+            identifyVisible();
+        }
     }
 }

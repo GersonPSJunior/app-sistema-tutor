@@ -61,6 +61,7 @@ public class AdapterDashboard extends RecyclerView.Adapter<AdapterDashboard.Dash
                     public void onClick(DialogInterface dialog, int which) {
                         //GerenciarLivroDao.remolveLivro(adapterPosition);
                         new AlunoRepository(context).delete(aluno);
+                        alunos.remove(aluno);
                         notifyItemRemoved(position);
                     }
                 })
@@ -79,6 +80,7 @@ public class AdapterDashboard extends RecyclerView.Adapter<AdapterDashboard.Dash
         private TextView textAutodidata;
         private TextView textFamilia;
         private Aluno aluno;
+        private Double aproveitamento;
         public DashboardViewHolder(@NonNull View itemView) {
             super(itemView);
             textAproveitamento = itemView.findViewById(R.id.text_aproveitamento);
@@ -87,9 +89,26 @@ public class AdapterDashboard extends RecyclerView.Adapter<AdapterDashboard.Dash
         }
 
         public void vincular(Aluno aluno){
-            if ((aluno.getMediaAutodidata() + aluno.getMediaFamilia())/2 < 60)
+            if (aluno.getAjuda() == null && aluno.getConcorso() == null)
+                aproveitamento = (aluno.getMediaAutodidata() * 0.5 + aluno.getMediaFamilia() * 0.5);
+
+            if (aluno.getAjuda() == null && aluno.getConcorso() != null)
+                aproveitamento = (aluno.getMediaAutodidata() * 0.35 +
+                        aluno.getMediaFamilia() * 0.35 + aluno.getMediaReforco() * 0.3);
+
+            if (aluno.getAjuda() != null && aluno.getConcorso() == null)
+                aproveitamento = (aluno.getMediaAutodidata() * 0.35 +
+                        aluno.getMediaFamilia() * 0.35 + aluno.getMediaExtraCurricular() * 0.3);
+
+            if (aluno.getAjuda() != null &&aluno.getConcorso() != null)
+                aproveitamento = (aluno.getMediaAutodidata() * 0.3 + aluno.getMediaFamilia() * 0.3 +
+                        aluno.getMediaReforco() * 0.2 + aluno.getMediaExtraCurricular() * 0.2);
+
+            if (aproveitamento < 60)
                 textAproveitamento.setTextColor(Color.RED);
-            textAproveitamento.setText((aluno.getMediaAutodidata() + aluno.getMediaFamilia())/2 + "%");
+            else textAproveitamento.setTextColor(Color.GREEN);
+
+            textAproveitamento.setText(aproveitamento + "%");
             textAutodidata.setText(aluno.getMediaAutodidata() +"%");
             textFamilia.setText(aluno.getMediaFamilia() +"%");
             this.aluno = aluno;

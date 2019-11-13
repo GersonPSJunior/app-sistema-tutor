@@ -21,6 +21,9 @@ import br.com.trabalho.ia.ui.autodidata.QuestionAutodidata;
 public class Dashboard extends AppCompatActivity implements IDashboard.View{
 
     private IDashboard.Presenter presenter;
+    private List<Aluno> alunos;
+    private AdapterDashboard adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,8 +52,8 @@ public class Dashboard extends AppCompatActivity implements IDashboard.View{
     private void configuraRecyclerView() {
         RecyclerView recyclerView = findViewById(R.id.recycler_dashboard);
 
-        List<Aluno> alunos = new AlunoRepository(this).listAll();
-        final AdapterDashboard adapter = new AdapterDashboard(this, alunos);
+        alunos = new AlunoRepository(this).listAll();
+        adapter = new AdapterDashboard(this, alunos);
         recyclerView.setAdapter(adapter);
 
         new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0,
