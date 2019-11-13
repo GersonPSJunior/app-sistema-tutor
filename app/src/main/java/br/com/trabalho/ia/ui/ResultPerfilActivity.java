@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import java.text.DecimalFormat;
+
 import br.com.trabalho.ia.R;
 import br.com.trabalho.ia.config.App;
 import br.com.trabalho.ia.repository.AlunoRepository;
@@ -77,7 +79,8 @@ public class ResultPerfilActivity extends AppCompatActivity {
             aproveitamento = (App.getAluno().getMediaAutodidata() * 0.3 + App.getAluno().getMediaFamilia() * 0.3 +
                     App.getAluno().getMediaReforco() * 0.2 + App.getAluno().getMediaExtraCurricular() * 0.2);
 
-        textResultAproveitamento.setText(aproveitamento +"%");
+        DecimalFormat df = new DecimalFormat("0.##");
+        textResultAproveitamento.setText(df.format(aproveitamento) + "%");
         textResultAproveitamento.setTextColor(aproveitamento < 60 ? Color.RED : Color.GREEN);
     }
 

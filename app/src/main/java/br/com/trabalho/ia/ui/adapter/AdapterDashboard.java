@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import br.com.trabalho.ia.R;
@@ -108,7 +109,8 @@ public class AdapterDashboard extends RecyclerView.Adapter<AdapterDashboard.Dash
                 textAproveitamento.setTextColor(Color.RED);
             else textAproveitamento.setTextColor(Color.GREEN);
 
-            textAproveitamento.setText(aproveitamento + "%");
+            DecimalFormat df = new DecimalFormat("0.##");
+            textAproveitamento.setText(df.format(aproveitamento) + "%");
             textAutodidata.setText(aluno.getMediaAutodidata() +"%");
             textFamilia.setText(aluno.getMediaFamilia() +"%");
             this.aluno = aluno;
