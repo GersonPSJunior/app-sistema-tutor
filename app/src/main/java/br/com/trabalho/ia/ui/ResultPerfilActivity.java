@@ -10,10 +10,11 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import java.text.DecimalFormat;
+import java.util.List;
 
 import br.com.trabalho.ia.R;
 import br.com.trabalho.ia.config.App;
+import br.com.trabalho.ia.domain.Aluno;
 import br.com.trabalho.ia.repository.AlunoRepository;
 
 public class ResultPerfilActivity extends AppCompatActivity {
@@ -40,8 +41,12 @@ public class ResultPerfilActivity extends AppCompatActivity {
     private ConstraintLayout constraintExtra;
     private ConstraintLayout constraintReforco;
     private ConstraintLayout constraintResultAproveitamento;
-    private Double aproveitamento;
     private ProgressBar progressBar;
+    private List<Aluno> alunos;
+    private List<Aluno> alunos25;
+    private List<Aluno> alunos50;
+    private List<Aluno> alunos75;
+    private List<Aluno> alunos100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +55,39 @@ public class ResultPerfilActivity extends AppCompatActivity {
 
         loadUi();
         loadText();
-        calculoAproveitamento();
-        feadbackValid();
+        alunos = new AlunoRepository(this).listAll();
+//        if (alunos != null)
+//            for (Aluno aluno : alunos) {
+//                if (calcularAproveitamento(aluno) <= 25)
+//                    alunos25.add(aluno);
+//
+//                if (calcularAproveitamento(aluno) > 25 && calcularAproveitamento(aluno) <= 50)
+//                    alunos50.add(aluno);
+//
+//                if (calcularAproveitamento(aluno) > 50 && calcularAproveitamento(aluno) <= 75)
+//                    alunos75.add(aluno);
+//
+//                if (calcularAproveitamento(aluno) > 75)
+//                    alunos100.add(aluno);
+//            }
+
+//        Double percentualBase = null;
+//        if (calcularAproveitamento(App.getAluno()) <= 25)
+//            alunos25.add(aluno);
+//
+//        if (calcularAproveitamento(App.getAluno()) > 25 && calcularAproveitamento(App.getAluno()) <= 50)
+//            alunos50.add(aluno);
+//
+//        if (calcularAproveitamento(App.getAluno()) > 50 && calcularAproveitamento(App.getAluno()) <= 75)
+//            alunos75.add(aluno);
+//
+//        if (calcularAproveitamento(App.getAluno()) > 75)
+//            alunos100.add(aluno);
+
+        Double aproveitamento = calcularAproveitamento(App.getAluno());
+        feadbackValid(aproveitamento);
+        textResultAproveitamento.setTextColor(aproveitamento < 60 ? Color.RED : Color.GREEN);
+        textResultAproveitamento.setText(aproveitamento+"%");
         App.getAluno().setAlunoRepository(new AlunoRepository(this));
         App.getAluno().insert();
 
@@ -63,25 +99,24 @@ public class ResultPerfilActivity extends AppCompatActivity {
         new buscaInfo().execute();
     }
 
-    private void calculoAproveitamento() {
-        if (App.getAluno().getAjuda() == null && App.getAluno().getConcorso() == null)
-            aproveitamento = (App.getAluno().getMediaAutodidata() * 0.5 + App.getAluno().getMediaFamilia() * 0.5);
+    private Double calcularAproveitamento(Aluno aluno) {
+        Double aproveitamento = null;
+        if (aluno.getAjuda() == null && aluno.getConcorso() == null)
+            aproveitamento = (aluno.getMediaAutodidata() * 0.5 + aluno.getMediaFamilia() * 0.5);
 
-        if (App.getAluno().getAjuda() == null && App.getAluno().getConcorso() != null)
+        if (aluno.getAjuda() == null && aluno.getConcorso() != null)
             aproveitamento = (App.getAluno().getMediaAutodidata() * 0.35 +
-                    App.getAluno().getMediaFamilia() * 0.35 + App.getAluno().getMediaReforco() * 0.3);
+                    aluno.getMediaFamilia() * 0.35 + aluno.getMediaReforco() * 0.3);
 
-        if (App.getAluno().getAjuda() != null && App.getAluno().getConcorso() == null)
-            aproveitamento = (App.getAluno().getMediaAutodidata() * 0.35 +
-                    App.getAluno().getMediaFamilia() * 0.35 + App.getAluno().getMediaExtraCurricular() * 0.3);
+        if (aluno.getAjuda() != null && aluno.getConcorso() == null)
+            aproveitamento = (aluno.getMediaAutodidata() * 0.35 +
+                    aluno.getMediaFamilia() * 0.35 + aluno.getMediaExtraCurricular() * 0.3);
 
-        if (App.getAluno().getAjuda() != null && App.getAluno().getConcorso() != null)
-            aproveitamento = (App.getAluno().getMediaAutodidata() * 0.3 + App.getAluno().getMediaFamilia() * 0.3 +
-                    App.getAluno().getMediaReforco() * 0.2 + App.getAluno().getMediaExtraCurricular() * 0.2);
+        if (aluno.getAjuda() != null && aluno.getConcorso() != null)
+            aproveitamento = (aluno.getMediaAutodidata() * 0.3 + aluno.getMediaFamilia() * 0.3 +
+                    aluno.getMediaReforco() * 0.2 + aluno.getMediaExtraCurricular() * 0.2);
 
-        DecimalFormat df = new DecimalFormat("0.##");
-        textResultAproveitamento.setText(df.format(aproveitamento) + "%");
-        textResultAproveitamento.setTextColor(aproveitamento < 60 ? Color.RED : Color.GREEN);
+        return aproveitamento;
     }
 
     private void identifyVisible() {
@@ -92,34 +127,73 @@ public class ResultPerfilActivity extends AppCompatActivity {
     }
 
     private void loadText() {
-        textAudicao.setText(App.getAluno().getAudicao() +"%");
-        textRepeticao.setText(App.getAluno().getRepeticao() +"%");
-        textVisao.setText(App.getAluno().getVisao() +"%");
-        textMediaAprendizado.setText(App.getAluno().getMediaAutodidata() +"%");
-        textFamiliaEspaco.setText(App.getAluno().getEspacoEstudo() +"%");
-        textFamiliaMateria.setText(App.getAluno().getMaterialDidatico() +"%");
-        textFamiliaMedia.setText(App.getAluno().getMediaFamilia() +"%");
-        textFamiliaTempo.setText(App.getAluno().getTempoEstudo() +"%");
-        textExtraAjuda.setText(App.getAluno().getAjuda() +"%");
-        textExtraAuxilio.setText(App.getAluno().getAuxilioEscolar() +"%");
-        textExtraMedia.setText(App.getAluno().getMediaExtraCurricular() +"%");
-        textExtraTempo.setText(App.getAluno().getConsumoTempo() +"%");
-        textReforcoAprendizado.setText(App.getAluno().getAprenderMais() +"%");
-        textReforcoConcurso.setText(App.getAluno().getConcorso() +"%");
-        textReforcoMedia.setText(App.getAluno().getMediaReforco() +"%");
-        textReforcoNota.setText(App.getAluno().getMelhorarNota() +"%");
+        textAudicao.setText(App.getAluno().getAudicao() + "%");
+        textRepeticao.setText(App.getAluno().getRepeticao() + "%");
+        textVisao.setText(App.getAluno().getVisao() + "%");
+        textMediaAprendizado.setText(App.getAluno().getMediaAutodidata() + "%");
+        textFamiliaEspaco.setText(App.getAluno().getEspacoEstudo() + "%");
+        textFamiliaMateria.setText(App.getAluno().getMaterialDidatico() + "%");
+        textFamiliaMedia.setText(App.getAluno().getMediaFamilia() + "%");
+        textFamiliaTempo.setText(App.getAluno().getTempoEstudo() + "%");
+        textExtraAjuda.setText(App.getAluno().getAjuda() + "%");
+        textExtraAuxilio.setText(App.getAluno().getAuxilioEscolar() + "%");
+        textExtraMedia.setText(App.getAluno().getMediaExtraCurricular() + "%");
+        textExtraTempo.setText(App.getAluno().getConsumoTempo() + "%");
+        textReforcoAprendizado.setText(App.getAluno().getAprenderMais() + "%");
+        textReforcoConcurso.setText(App.getAluno().getConcorso() + "%");
+        textReforcoMedia.setText(App.getAluno().getMediaReforco() + "%");
+        textReforcoNota.setText(App.getAluno().getMelhorarNota() + "%");
     }
 
-    private void feadbackValid() {
-        if (aproveitamento > 75){
-            textResultFeadback.setText("Parabéns! Está muito bem encaminhado seus estudos. Logico que sempre dá para melhorar um pouco mais, mas continue como está!");
-        } else if (aproveitamento <= 75 && aproveitamento > 50){
-            textResultFeadback.setText("Tome cuidado com os detalhes. Você está indo bem, mas sempre procure melhorar, busque novos caminhos para estudar e se desenvolver mais!");
-        } else  if (aproveitamento <= 50 && aproveitamento > 25){
-            textResultFeadback.setText("Sempre há algo que se pode melhorar. Busque novas alternativas, o caminho que está seguindo pode não ser o melhor.");
-        } else if (aproveitamento <= 25){
-            textResultFeadback.setText("Definitivamente o que está fazendo não está te ajudando, busque novas formas de estudar e coisas que possam te ajudar a se desenvolver melhor.");
+    private void feadbackValid(Double aproveitamento) {
+        String message;
+        if (aproveitamento > 75) {
+            message = "Parabéns! Está muito bem encaminhado seus estudos. Logico que sempre dá para melhorar um pouco mais, mas continue como está!";
+        } else if (aproveitamento <= 75 && aproveitamento > 50) {
+            message = "Tome cuidado com os detalhes. Você está indo bem, mas sempre procure melhorar, busque novos caminhos para estudar e se desenvolver mais!\n";
+            if (App.getAluno().getMediaAutodidata() < 66) {
+                message += "\nEstá mandando bem, mas ainda pode melhorar!\n" +
+                        "Foque em aprender por:";
+                if (App.getAluno().getAudicao() < 50)
+                    message += "\nAudição\n";
+                if (App.getAluno().getVisao() < 50)
+                    message += "\nVisão\n";
+                if (App.getAluno().getRepeticao() < 50)
+                    message += "\nEscrita\n";
+            }
+            if (App.getAluno().getMediaFamilia() < 66)
+                message += "\nAjuda familiar pode te auxiliar e ter um grande impacto no aprendizado!\n";
+            if (App.getAluno().getMediaExtraCurricular() != null && App.getAluno().getMediaExtraCurricular() < 66)
+                message += "\nMantenha o foco em suas atividades extracurriculares!\n";
+            if (App.getAluno().getMediaReforco() != null && App.getAluno().getMediaReforco() < 66)
+                message += "\nIntensifique seus estudos nas aulas de reforço!\n";
+        } else if (aproveitamento <= 50 && aproveitamento > 25) {
+            //message = "Sempre há algo que se pode melhorar. Busque novas alternativas, o caminho que está seguindo pode não ser o melhor.";
+            message = "\nVocê está se esforçando, mas talvez deva seguir outros caminhos para ser um melhor autodidata.\n";
+            message += "\nEstá mandando bem, mas ainda pode melhorar!\n" +
+                    "Foque em aprender por:";
+            if (App.getAluno().getAudicao() < 50)
+                message += "\nAudição\n";
+            if (App.getAluno().getVisao() < 50)
+                message += "\nVisão\n";
+            if (App.getAluno().getRepeticao() < 50)
+                message += "\nEscrita\n";
+            message += "\nAjuda familiar pode te auxiliar e ter um grande impacto no aprendizado!\n";
+
+            if (App.getAluno().getMediaExtraCurricular() == null && App.getAluno().getMediaReforco() == null)
+                message += "\nBusque realizar atividades extracurriculares e aulas de reforço!\n";
+            if (App.getAluno().getMediaExtraCurricular() != null && App.getAluno().getMediaReforco() == null)
+                message += "\nProcure fazer aulas de reforço!\n";
+            if (App.getAluno().getMediaExtraCurricular() == null && App.getAluno().getMediaReforco() != null)
+                message += "\nAtividades extracurriculares te auxiliaram no processo!\n";
+        } else if (aproveitamento <= 25 && aproveitamento >= 1) {
+            message = "Você não está no caminho certo e precisa mudar a forma de estudar!\n\n" +
+                    "Reserve um tempo maior para os estudos e sua família será de grande ajuda no processo.";
+        } else {
+            message = "Há algo muito errado com você e seus estudos!\n" +
+                    "Tenha um mínimo de dedicação ou nunca apresentará bons resultados.";
         }
+        textResultFeadback.setText(message);
     }
 
     private void loadUi() {

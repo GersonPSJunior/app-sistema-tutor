@@ -39,8 +39,6 @@ public class Dashboard extends AppCompatActivity implements IDashboard.View{
                 presenter.clickAdd();
             }
         });
-
-        configuraRecyclerView();
     }
 
     @Override
